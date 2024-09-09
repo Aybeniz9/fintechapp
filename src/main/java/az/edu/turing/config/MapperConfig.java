@@ -23,4 +23,5 @@ public class MapperConfig {
         public AccountMapper accountMapper(){return Mappers.getMapper(AccountMapper.class);}
         @Bean
         public AccountResponseMapper accountResponseMapper(){return Mappers.getMapper(AccountResponseMapper.class);}
+
 }

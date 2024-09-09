@@ -1,5 +1,6 @@
 package az.edu.turing.controller;
 
+import az.edu.turing.dao.entity.UserEntity;
 import az.edu.turing.model.dto.UserDto;
 import az.edu.turing.service.UserService;
 import jakarta.validation.Valid;
@@ -20,7 +21,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
     @GetMapping("/{finCode}")
-    public ResponseEntity<UserDto> getUser(@PathVariable String finCode) {
+    public ResponseEntity<UserEntity> getUser(@PathVariable String finCode) {
         return ResponseEntity.ok(userService.getUser(finCode));
     }
     @PostMapping("/create")
@@ -32,8 +33,8 @@ public class UserController {
         UserDto updatedUser = userService.updateUser(finCode, userDto);
         return ResponseEntity.ok(updatedUser);
     }
-    @DeleteMapping("/delete/{finCode}")
-    public void deleteUser(@PathVariable String finCode) {
-        userService.deleteUser(finCode);
-    }
+//    @DeleteMapping("/delete/{finCode}")
+//    public void deleteUser(@PathVariable String finCode) {
+//        userService.deleteUser(finCode);
+//    }
 }

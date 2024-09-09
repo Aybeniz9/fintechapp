@@ -1,6 +1,7 @@
 package az.edu.turing.dao.entity;
 
 import az.edu.turing.model.enums.AccountStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,18 +11,15 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity(name = "Account")
-@ToString
 public class AccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,5 +43,6 @@ public class AccountEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private UserEntity user;
 }

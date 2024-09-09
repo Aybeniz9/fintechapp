@@ -19,4 +19,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleAccountBlockedException(AccountBlockedException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ResponseEntity<String> handleUserAlreadyExistException(UserAlreadyExistException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
