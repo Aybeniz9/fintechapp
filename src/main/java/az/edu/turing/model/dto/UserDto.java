@@ -1,9 +1,13 @@
 package az.edu.turing.model.dto;
 
+import az.edu.turing.dao.entity.AccountEntity;
+import az.edu.turing.model.dto.account.AccountDto;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,7 +23,7 @@ public class UserDto {
     private String surname;
 
     @NotBlank(message = "FIN code is required")
-    @Size(min = 10, max = 10, message = "FIN code must be exactly 10 characters")
+    @Size(min = 7, max = 7, message = "FIN code must be exactly 10 characters")
     private String finCode;
 
     @Min(value = 18, message = "Age must be at least 18")
@@ -40,4 +44,7 @@ public class UserDto {
 
     @NotBlank
     private String password;
+
+    @NotBlank
+    private List<AccountDto> accounts;
 }
