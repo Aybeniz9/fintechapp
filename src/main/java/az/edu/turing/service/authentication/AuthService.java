@@ -2,6 +2,7 @@ package az.edu.turing.service.authentication;
 
 import az.edu.turing.dao.entity.UserEntity;
 import az.edu.turing.dao.repository.UserRepository;
+import az.edu.turing.exception.UserAlreadyExistException;
 import az.edu.turing.exception.UserNotFoundException;
 import az.edu.turing.jwt.JwtService;
 import az.edu.turing.mapper.UserMapper;
@@ -40,7 +41,7 @@ public class AuthService {
 
     public UserRegisterResponse register(UserRegisterRequest userRegisterRequest) {
         if (userRepository.existsByFinCode(userRegisterRequest.getFinCode())) {
-            throw new RuntimeException("User Already Exists for this fin code");
+            throw new UserAlreadyExistException("User Already Exists for this fin code");
         }
         userRegisterRequest.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
 

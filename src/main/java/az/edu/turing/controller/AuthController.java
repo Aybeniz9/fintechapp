@@ -17,28 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @Slf4j
 public class AuthController {
-    private final AuthService authService;
-    private final UserService userService;
 
-    //    private final AuthService authService;
-//
-//    @PostMapping("/login{finCode}{password}")
-//    public ResponseEntity<String> login(@PathVariable String finCode, @PathVariable String password) {
-//        authService.login(finCode, password);
-//        return ResponseEntity.ok("Login successful");
-//    }
-//    @GetMapping("/login")
-//    public ResponseEntity<String> login() {
-//        return ResponseEntity.ok("Login successful");
-//    }
-//    @PostMapping("/register")
-//    public ResponseEntity<UserDto> register(@RequestBody UserDto userDto) {
-//        return ResponseEntity.ok(authService.register(userDto));
-//    }
-//    @PostMapping("/authenticate")
-//    public ResponseEntity<TokenResponse> generateToken(@RequestBody UserLoginRequest userLoginRequest) {
-//        return ResponseEntity.ok(authService.authenticate(userLoginRequest));
-//    }
+    private final AuthService authService;
+
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
         return ResponseEntity.ok(authService.login(userLoginRequest));

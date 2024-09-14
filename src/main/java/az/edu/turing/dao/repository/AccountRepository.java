@@ -16,6 +16,7 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
     Optional<AccountEntity> findByCartNumber(String cartNumber);
+
     @Query("SELECT a FROM Account a WHERE a.user.id = :userId")
     List<AccountEntity> findAccountsByUserId(@Param("userId") Long userId);
 }

@@ -22,7 +22,7 @@ public class AccountController {
     public ResponseEntity<AccountTransferRequest> transferMoney(@Valid @RequestBody AccountTransferRequest requestDto) {
         return ResponseEntity.ok(service.transfer(requestDto));
     }
-    @GetMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<AccountDto> create(@RequestHeader ("Authorization") String auth) {//TODO
         String finCode = helper.getFinCode(auth);
         return ResponseEntity.ok(service.createAccount(finCode));

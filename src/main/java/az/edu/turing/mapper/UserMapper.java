@@ -18,6 +18,8 @@ public interface UserMapper {
 
     UserDto entityToDto(UserEntity userEntity);
 
+    UserRegisterRequest entityToRegisterRequest(UserEntity userEntity);
+
     UserResponse entityToResponse(UserEntity userEntity);
 
     List<UserDto> entityListToDtoList(List<UserEntity> userEntity);
@@ -28,6 +30,6 @@ public interface UserMapper {
 
     UserRegisterResponse entityToDtoFromResponse(UserEntity userDto);
 
-    void updateEntityFromDto(UserDto userDto, @MappingTarget UserEntity userEntity);
+    void updateEntityFromDto(UserRegisterRequest userRegisterRequest, @MappingTarget UserEntity userEntity);
 }
 

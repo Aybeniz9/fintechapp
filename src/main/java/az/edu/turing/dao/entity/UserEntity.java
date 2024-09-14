@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @NoArgsConstructor
-@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id = ?")
+//@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id = ?")
 public class UserEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

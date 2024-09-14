@@ -14,13 +14,13 @@ public class CartGenerationService {
     private final Random random =new Random();
 
     public AccountDto createCart() {
-        AccountDto accountDto = new AccountDto(); // Yenisini yaratmaq
+        AccountDto accountDto = new AccountDto();
         accountDto.setCartNumber(cartGenerator());
         accountDto.setAccountStatus(AccountStatus.ACTIVE);
         accountDto.setBalance(BigDecimal.valueOf(0));
         accountDto.setCvv(cvvGenerator());
         accountDto.setPin(pinGenerator());
-        return accountDto; // Yaradılan account-u geri qaytarmaq
+        return accountDto;
     }
 
     private String cartGenerator() {

@@ -5,6 +5,7 @@ import az.edu.turing.model.dto.user.UserDto;
 import az.edu.turing.dao.entity.UserEntity;
 import az.edu.turing.mapper.UserMapper;
 import az.edu.turing.dao.repository.UserRepository;
+import az.edu.turing.model.dto.user.UserRegisterRequest;
 import az.edu.turing.model.dto.user.UserResponse;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -49,14 +50,15 @@ public class UserService {
         log.info("User {} deleted", finCode);//todo
     }
 
-    public UserDto updateUser(@NotBlank String finCode, @NotNull UserDto userDto) {
+    public UserRegisterRequest updateUser(@NotBlank String finCode, @NotNull UserRegisterRequest userRegisterRequest) {
         UserEntity existingUserEntity = userRepository.findByFinCode(finCode)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        userMapper.updateEntityFromDto(userDto, existingUserEntity);
+        userMapper.updateEntityFromDto(userRegisterRequest, existingUserEntity);
         UserEntity updatedUserEntity = userRepository.save(existingUserEntity);
 
-        return userMapper.entityToDto(updatedUserEntity);
+        UserRegisterRequest userRegister = userMapper.entityToRegisterRequest(updatedUserEntity);
+        return userRegister;
     }
 
 }
