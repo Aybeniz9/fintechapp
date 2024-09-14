@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountRequest {
+public class AccountTransferRequest {
     @NotBlank(message = "Cart number cannot be blank")
     private String cartNumber;
 

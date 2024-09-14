@@ -1,25 +1,24 @@
-package az.edu.turing.service;
+package az.edu.turing.service.account;
 
 import az.edu.turing.dao.entity.AccountEntity;
 import az.edu.turing.dao.entity.UserEntity;
 import az.edu.turing.dao.repository.AccountRepository;
 import az.edu.turing.dao.repository.UserRepository;
 import az.edu.turing.exception.AccountBlockedException;
+import az.edu.turing.exception.AccountsNotFoundException;
 import az.edu.turing.exception.CartNotFoundException;
 import az.edu.turing.exception.UserNotFoundException;
 import az.edu.turing.mapper.AccountMapper;
-import az.edu.turing.mapper.AccountRequestMapper;
-import az.edu.turing.mapper.AccountResponseMapper;
 import az.edu.turing.model.dto.account.AccountDto;
-import az.edu.turing.model.dto.account.AccountRequest;
+import az.edu.turing.model.dto.account.AccountTransferRequest;
 import az.edu.turing.model.dto.account.AccountResponse;
 import az.edu.turing.model.enums.AccountStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,20 +27,18 @@ public class AccountService {
     private final CartGenerationService cartGenerationService;
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
-    private final AccountRequestMapper accountRequestMapper;
-    private final AccountResponseMapper accountResponseMapper;
     private final AccountMapper accountMapper;
 
-    public AccountRequest transfer(AccountRequest accountRequest){
+    public AccountTransferRequest transfer(AccountTransferRequest accountTransferRequest){
 
-        AccountEntity accountEntity = accountRepository.findByCartNumber(accountRequest.getCartNumber())
+        AccountEntity accountEntity = accountRepository.findByCartNumber(accountTransferRequest.getCartNumber())
                 .orElseThrow(() -> new CartNotFoundException("Cart not found !"));
         AccountStatus accountStatus = accountEntity.getAccountStatus();
         if (accountStatus == AccountStatus.BLOCKED) {
             throw new AccountBlockedException("Account blocked");
         }
-        accountEntity.setBalance(accountRequest.getPrice());
-        return accountRequestMapper.entityToDto(accountEntity);
+        accountEntity.setBalance(accountTransferRequest.getPrice());
+        return accountMapper.entityToAccountTransferRequest(accountEntity);
     }
 
     public AccountDto createAccount(String finCode) {
@@ -61,10 +58,19 @@ public class AccountService {
         byCartNumber.setAccountStatus(AccountStatus.BLOCKED);
         accountRepository.save(byCartNumber);
     }
-    public AccountResponse getBalance(String cartNumber) {
-        AccountEntity account = accountRepository.findByCartNumber(cartNumber).orElseThrow(() -> new CartNotFoundException("Cart not found !"));
-        return   accountResponseMapper.entityToDto(account);
+    public List<AccountResponse> getBalance(String finCode) {
+        UserEntity userEntity = userRepository.findByFinCode(finCode)
+                .orElseThrow(() -> new UserNotFoundException("User not found with finCode: " + finCode));
+
+        List<AccountEntity> accountsByUserId = accountRepository.findAccountsByUserId(userEntity.getId());
+
+        if (accountsByUserId.isEmpty()) {
+            throw new AccountsNotFoundException("No accounts found for user with finCode: " + finCode);
+        }
+
+        return accountMapper.entityToAccountResponse(accountsByUserId);
     }
+
 
 }
 

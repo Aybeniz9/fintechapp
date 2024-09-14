@@ -23,4 +23,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleUserAlreadyExistException(UserAlreadyExistException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(AccountsNotFoundException.class)
+    public ResponseEntity<String> handleException(AccountsNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

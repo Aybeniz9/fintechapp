@@ -1,4 +1,4 @@
-package az.edu.turing.service;
+package az.edu.turing.service.account;
 
 import az.edu.turing.model.dto.account.AccountDto;
 import az.edu.turing.model.enums.AccountStatus;

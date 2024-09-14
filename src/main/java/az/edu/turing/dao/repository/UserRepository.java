@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity,Long> {
-   void deleteByFinCode(String finCode);
+   void deleteByFinCode(String finCode);//todo
    Optional<UserEntity> findByFinCode(String finCode);
 
     boolean existsByFinCode(@NotBlank String finCode);

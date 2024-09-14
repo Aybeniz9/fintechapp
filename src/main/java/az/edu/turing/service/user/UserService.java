@@ -1,11 +1,11 @@
-package az.edu.turing.service;
+package az.edu.turing.service.user;
 
-import az.edu.turing.dao.entity.AccountEntity;
 import az.edu.turing.exception.UserNotFoundException;
-import az.edu.turing.model.dto.UserDto;
+import az.edu.turing.model.dto.user.UserDto;
 import az.edu.turing.dao.entity.UserEntity;
 import az.edu.turing.mapper.UserMapper;
 import az.edu.turing.dao.repository.UserRepository;
+import az.edu.turing.model.dto.user.UserResponse;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -22,17 +22,20 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+//    public UserDto create(@NotNull UserDto userDto) {
+//        String encode = passwordEncoder.encode(userDto.getPassword());
+//        log.info("encode: {}", encode);
+//        UserEntity userEntity = userMapper.dtoToEntity(userDto);
+//        userEntity.setPassword(encode);
+//        userRepository.save(userEntity);
+//        return userMapper.entityToDto(userEntity);
+//    }
 
-    public UserDto create(@NotNull UserDto userDto) {
-        UserEntity userEntity = userMapper.dtoToEntity(userDto);
-        userRepository.save(userEntity);
-        return userMapper.entityToDto(userEntity);
-    }
-
-    public UserEntity getUser(@NotBlank String finCode) {
+    public UserResponse getUser(@NotBlank String finCode) {
         UserEntity userEntity = userRepository.findByFinCode(finCode)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
-        return userEntity;
+        UserResponse userResponse = userMapper.entityToResponse(userEntity);
+        return userResponse;
     }
 
     public List<UserDto> getAllUsers() {
@@ -40,10 +43,11 @@ public class UserService {
         return userMapper.entityListToDtoList(all);
     }
 
-//    public void deleteUser(@NotBlank String finCode) {
-//        UserEntity userEntity = userRepository.existsByFinCode(finCode).orElseThrow(()->new UserNotFoundException("User not found found for "));
-//        userRepository.delete(userEntity);
-//    }
+    public void deleteUser(@NotBlank String finCode) {
+        UserEntity userEntity = userRepository.findByFinCode(finCode).orElseThrow(() -> new UserNotFoundException("Aybeniz tap;lmad;"));
+        userRepository.delete(userEntity);
+        log.info("User {} deleted", finCode);//todo
+    }
 
     public UserDto updateUser(@NotBlank String finCode, @NotNull UserDto userDto) {
         UserEntity existingUserEntity = userRepository.findByFinCode(finCode)
@@ -54,4 +58,5 @@ public class UserService {
 
         return userMapper.entityToDto(updatedUserEntity);
     }
+
 }

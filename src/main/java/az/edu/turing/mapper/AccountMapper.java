@@ -2,7 +2,10 @@ package az.edu.turing.mapper;
 
 import az.edu.turing.dao.entity.AccountEntity;
 import az.edu.turing.model.dto.account.AccountDto;
+import az.edu.turing.model.dto.account.AccountResponse;
+import az.edu.turing.model.dto.account.AccountTransferRequest;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
@@ -10,7 +13,7 @@ import java.util.List;
 
 @Mapper
 public interface AccountMapper {
-    AccountMapper INSTANCE = Mappers.getMapper(AccountMapper.class);
+//    AccountMapper INSTANCE = Mappers.getMapper(AccountMapper.class);
 
     AccountDto entityToDto(AccountEntity accountEntity);
 
@@ -19,4 +22,12 @@ public interface AccountMapper {
     AccountEntity dtoToEntity(AccountDto accountDto);
 
     void updateEntityFromDto(AccountDto accountDto, @MappingTarget AccountEntity accountEntity);
+
+    AccountResponse entityToAccountResponse(AccountEntity accountEntity);
+
+    @Mapping(source = "balance", target = "price")
+    @Mapping(source = "accountStatus", target = "status")
+    List<AccountResponse> entityToAccountResponse(List<AccountEntity> accountEntity);
+
+    AccountTransferRequest entityToAccountTransferRequest(AccountEntity accountEntity);
 }

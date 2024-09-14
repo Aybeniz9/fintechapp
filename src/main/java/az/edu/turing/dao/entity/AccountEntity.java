@@ -12,6 +12,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 
 import java.math.BigDecimal;
 
@@ -20,6 +21,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity(name = "Account")
+//@SQLDelete()
 public class AccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserRequest {
+public class UserLoginRequest {
 
     @NotBlank(message = "FIN code is required")
     @Size(min = 10, max = 10, message = "FIN code must be exactly 10 characters")

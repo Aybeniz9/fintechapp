@@ -1,19 +1,12 @@
-package az.edu.turing.model.dto;
+package az.edu.turing.model.dto.user;
 
-import az.edu.turing.dao.entity.AccountEntity;
 import az.edu.turing.model.dto.account.AccountDto;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
-
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-public class UserDto {
-
+public class UserResponse {
     @NotBlank(message = "Name is required")
     @Size(max = 50, message = "Name cannot exceed 50 characters")
     private String name;
@@ -41,9 +34,6 @@ public class UserDto {
 
     @Size(max = 255, message = "Address cannot exceed 255 characters")
     private String address;
-
-    @NotBlank
-    private String password;
 
     @NotBlank
     private List<AccountDto> accounts;
