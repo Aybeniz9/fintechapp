@@ -31,10 +31,7 @@ public class UserController {
         UserResponse user = userService.getUser(finCode);
         return ResponseEntity.ok(user);
     }
-//    @PostMapping("/create")
-//    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-//        return ResponseEntity.ok(userService.create(userDto));
-//    }
+
     @PatchMapping("/update2")
     public ResponseEntity<UserRegisterRequest> updateUser(@RequestHeader ("Authorization") String auth, @Valid @RequestBody UserRegisterRequest userDto) {
         String finCode = helper.getFinCode(auth);
