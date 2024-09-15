@@ -1,6 +1,7 @@
 package az.edu.turing.model.dto.user;
 
 import az.edu.turing.model.dto.account.AccountDto;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +23,7 @@ public class UserDto {
     private String surname;
 
     @NotBlank(message = "FIN code is required")
-    @Size(min = 7, max = 7, message = "FIN code must be exactly 10 characters")
+    @Size(min = 7, max = 7, message = "FIN code must be exactly 7 characters")
     private String finCode;
 
     @Min(value = 18, message = "Age must be at least 18")
