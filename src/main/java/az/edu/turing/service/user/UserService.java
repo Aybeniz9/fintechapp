@@ -1,5 +1,6 @@
 package az.edu.turing.service.user;
 
+import az.edu.turing.exception.CustomException;
 import az.edu.turing.exception.UserNotFoundException;
 import az.edu.turing.model.dto.user.UserDto;
 import az.edu.turing.dao.entity.UserEntity;
@@ -23,14 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-//    public UserDto create(@NotNull UserDto userDto) {
-//        String encode = passwordEncoder.encode(userDto.getPassword());
-//        log.info("encode: {}", encode);
-//        UserEntity userEntity = userMapper.dtoToEntity(userDto);
-//        userEntity.setPassword(encode);
-//        userRepository.save(userEntity);
-//        return userMapper.entityToDto(userEntity);
-//    }
+
 
     public UserResponse getUser(@NotBlank String finCode) {
         UserEntity userEntity = userRepository.findByFinCode(finCode)
@@ -51,8 +45,23 @@ public class UserService {
     }
 
     public UserRegisterRequest updateUser(@NotBlank String finCode, @NotNull UserRegisterRequest userRegisterRequest) {
+
         UserEntity existingUserEntity = userRepository.findByFinCode(finCode)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (userRepository.existsByFinCode(userRegisterRequest.getFinCode()) &&
+                !finCode.equals(userRegisterRequest.getFinCode())) {
+            throw new CustomException("This FIN code already belongs to another user");
+        }
+        if (userRepository.existsByEmail(userRegisterRequest.getEmail()) &&
+                !existingUserEntity.getEmail().equals(userRegisterRequest.getEmail())) {
+            throw new CustomException("This email already belongs to another user");
+        }
+
+        if (userRepository.existsByPhoneNumber(userRegisterRequest.getPhoneNumber()) &&
+                !existingUserEntity.getPhoneNumber().equals(userRegisterRequest.getPhoneNumber())) {
+            throw new CustomException("This phone number already belongs to another user");
+        }
 
         userMapper.updateEntityFromDto(userRegisterRequest, existingUserEntity);
         UserEntity updatedUserEntity = userRepository.save(existingUserEntity);
@@ -60,5 +69,4 @@ public class UserService {
         UserRegisterRequest userRegister = userMapper.entityToRegisterRequest(updatedUserEntity);
         return userRegister;
     }
-
 }
