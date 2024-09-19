@@ -7,6 +7,6 @@ import java.math.BigDecimal;
 @Data
 public class AccountResponse {
     private String cartNumber;
-    private BigDecimal price;
-    private String status;
+    private BigDecimal balance;
+    private String accountStatus;
 }

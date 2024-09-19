@@ -4,21 +4,23 @@ import az.edu.turing.dao.entity.AccountEntity;
 import az.edu.turing.dao.entity.UserEntity;
 import az.edu.turing.dao.repository.AccountRepository;
 import az.edu.turing.dao.repository.UserRepository;
-import az.edu.turing.exception.AccountBlockedException;
-import az.edu.turing.exception.AccountsNotFoundException;
-import az.edu.turing.exception.CartNotFoundException;
-import az.edu.turing.exception.UserNotFoundException;
+import az.edu.turing.exception.*;
 import az.edu.turing.mapper.AccountMapper;
 import az.edu.turing.model.dto.account.AccountDto;
 import az.edu.turing.model.dto.account.AccountTransferRequest;
 import az.edu.turing.model.dto.account.AccountResponse;
 import az.edu.turing.model.enums.AccountStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -29,18 +31,34 @@ public class AccountService {
     private final UserRepository userRepository;
     private final AccountMapper accountMapper;
 
-    public AccountTransferRequest transfer(AccountTransferRequest accountTransferRequest){
+    @Transactional//todo
+    public AccountTransferRequest transfer(String finCode ,AccountTransferRequest accountTransferRequest){
+        Optional<UserEntity> myAccountEntity = userRepository.findByFinCode(finCode);
+        List<AccountEntity> accounts = myAccountEntity.get().getAccounts();
 
-        AccountEntity accountEntity = accountRepository.findByCartNumber(accountTransferRequest.getCartNumber())
-                .orElseThrow(() -> new CartNotFoundException("Cart not found !"));
-        AccountStatus accountStatus = accountEntity.getAccountStatus();
-        if (accountStatus == AccountStatus.BLOCKED) {
-            throw new AccountBlockedException("Account blocked");
+        AccountEntity matchingAccount = accounts.stream()
+                .filter(a -> a.getCartNumber().equals(accountTransferRequest.getMyCartNumber()))
+                .findFirst().orElseThrow(()->new InvalidCartNumberException("Invalid cart number"));
+
+        AccountEntity myAccount = accountRepository
+                .findByCartNumber(accountTransferRequest.getMyCartNumber())
+                .orElseThrow(() -> new InvalidCartNumberException("Cart number not found"));
+
+        AccountEntity transferAccount = accountRepository
+                .findByCartNumber(accountTransferRequest.getTransferCartNumber())
+                .orElseThrow(() -> new CartNotFoundException("Cart number not found"));
+
+        if (myAccount.getBalance().compareTo(accountTransferRequest.getBalance()) >=0){
+
+            BigDecimal myCartNumberNewBalance = myAccount.getBalance().subtract(accountTransferRequest.getBalance());
+            BigDecimal transferCartNumberNewBalance = transferAccount.getBalance().add(accountTransferRequest.getBalance());
+
+            accountRepository.updateAccountBalance(myAccount.getCartNumber(),myCartNumberNewBalance);
+            accountRepository.updateAccountBalance(transferAccount.getCartNumber(),transferCartNumberNewBalance);
         }
-        accountEntity.setBalance(accountTransferRequest.getPrice());
-        return accountMapper.entityToAccountTransferRequest(accountEntity);
+        return accountTransferRequest;
     }
-
+    @Transactional
     public AccountDto createAccount(String finCode) {
         UserEntity userEntity = userRepository.findByFinCode(finCode)
                 .orElseThrow(() -> new UserNotFoundException("User not found with finCode: " + finCode));
@@ -52,13 +70,14 @@ public class AccountService {
 
         return accountMapper.entityToDto(savedEntity);
     }
-
+    @Transactional
     public void blockAccount(String cartNumber ){
         AccountEntity byCartNumber = accountRepository.findByCartNumber(cartNumber).orElseThrow(()->new CartNotFoundException("Cart not found"));
         byCartNumber.setAccountStatus(AccountStatus.BLOCKED);
         accountRepository.save(byCartNumber);
     }
-    public List<AccountResponse> getBalance(String finCode) {
+    @Transactional(readOnly = true)
+    public List<AccountResponse> getMyAccount(String finCode) {
         UserEntity userEntity = userRepository.findByFinCode(finCode)
                 .orElseThrow(() -> new UserNotFoundException("User not found with finCode: " + finCode));
 
@@ -68,11 +87,30 @@ public class AccountService {
             throw new AccountsNotFoundException("No accounts found for user with finCode: " + finCode);
         }
 
-        return accountMapper.entityToAccountResponse(accountsByUserId);
+        return accountMapper.entityListToAccountResponseList(accountsByUserId);
+    }
+    @Transactional
+    public void updatePin(String finCode,  String cartNumber , String oldPin , String newPin ) {
+        UserEntity userEntity = userRepository.findByFinCode(finCode)
+                .orElseThrow(() -> new UserNotFoundException("User not found with finCode: " + finCode));
+
+        List<AccountEntity> accountsByUserId = accountRepository.findAccountsByUserId(userEntity.getId());
+        AccountEntity matchesAccount = accountsByUserId.stream().filter(account -> account.getCartNumber().equals(cartNumber)).findFirst().orElseThrow(()->new CartNotFoundException("Cart not found"));
+
+        boolean equals = matchesAccount.getPin().equals(oldPin);
+        if (equals) {
+            matchesAccount.setPin(newPin);
+            accountRepository.updateAccountEntityByCartNumber(cartNumber, matchesAccount);
+        }else {
+            throw new InvalidCartNumberException("Pin code false ");
+        }
+
+
+
     }
 
-
 }
+
 
 
 

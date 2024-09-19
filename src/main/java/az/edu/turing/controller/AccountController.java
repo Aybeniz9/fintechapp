@@ -3,6 +3,7 @@ package az.edu.turing.controller;
 import az.edu.turing.model.dto.account.AccountDto;
 import az.edu.turing.model.dto.account.AccountTransferRequest;
 import az.edu.turing.model.dto.account.AccountResponse;
+import az.edu.turing.model.dto.account.AccountUpdateRequest;
 import az.edu.turing.service.account.AccountService;
 import az.edu.turing.service.authorization.AuthorizationHelperService;
 import jakarta.validation.Valid;
@@ -16,24 +17,28 @@ import java.util.List;
 @RequestMapping("/api/v1/account")
 @RequiredArgsConstructor
 public class AccountController {
+
     private final AccountService service;
     private final AuthorizationHelperService helper;
+
     @PostMapping("/transfer")
-    public ResponseEntity<AccountTransferRequest> transferMoney(@Valid @RequestBody AccountTransferRequest requestDto) {
-        return ResponseEntity.ok(service.transfer(requestDto));
+    public ResponseEntity<AccountTransferRequest> transferMoney(@RequestHeader ("Authorization") String auth ,@Valid @RequestBody AccountTransferRequest requestDto) {
+        String finCode = helper.getFinCode(auth);
+        return ResponseEntity.ok(service.transfer(finCode,requestDto));
     }
     @PostMapping("/create")
-    public ResponseEntity<AccountDto> create(@RequestHeader ("Authorization") String auth) {//TODO
+    public ResponseEntity<AccountDto> create(@RequestHeader ("Authorization") String auth) {
         String finCode = helper.getFinCode(auth);
         return ResponseEntity.ok(service.createAccount(finCode));
     }
-    @GetMapping("/balance")
-    public ResponseEntity<List<AccountResponse>> getBalance(@RequestHeader ("Authorization") String auth) {
+    @GetMapping("/")
+    public ResponseEntity<List<AccountResponse>> account(@RequestHeader ("Authorization") String auth) {
         String finCode = helper.getFinCode(auth);
-        return ResponseEntity.ok(service.getBalance(finCode));
+        return ResponseEntity.ok(service.getMyAccount(finCode));
     }
-    @PatchMapping("/update/block/{cartNumber}")
-    public void update(@PathVariable String cartNumber) {
-        service.blockAccount(cartNumber);
+    @PatchMapping("/update")
+    public void update(@RequestHeader("Authorization")  String  auth ,@RequestBody AccountUpdateRequest request) {
+        String finCode = helper.getFinCode(auth);
+        service.updatePin(finCode,request.getCartNumber(),request.getOldPin(),request.getNewPin());
     }
 }
