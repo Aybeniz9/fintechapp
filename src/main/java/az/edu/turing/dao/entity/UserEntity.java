@@ -3,8 +3,6 @@ package az.edu.turing.dao.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import java.util.List;
 
@@ -14,8 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @NoArgsConstructor
-//@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id = ?")
-public class UserEntity{
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -47,6 +44,4 @@ public class UserEntity{
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonIgnore
     private List<AccountEntity> accounts;
-
-
 }

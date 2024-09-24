@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity(name = "Account")
-//@SQLDelete()
 public class AccountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
