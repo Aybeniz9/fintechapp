@@ -32,13 +32,13 @@ public class AccountService {
     private final AccountMapper accountMapper;
 
     @Transactional//todo
-    public AccountTransferRequest transfer(String finCode ,AccountTransferRequest accountTransferRequest){
+    public AccountTransferRequest transfer(String finCode, AccountTransferRequest accountTransferRequest) {
         Optional<UserEntity> myAccountEntity = userRepository.findByFinCode(finCode);
         List<AccountEntity> accounts = myAccountEntity.get().getAccounts();
 
         AccountEntity matchingAccount = accounts.stream()
                 .filter(a -> a.getCartNumber().equals(accountTransferRequest.getMyCartNumber()))
-                .findFirst().orElseThrow(()->new InvalidCartNumberException("Invalid cart number"));
+                .findFirst().orElseThrow(() -> new InvalidCartNumberException("Invalid cart number"));
 
         AccountEntity myAccount = accountRepository
                 .findByCartNumber(accountTransferRequest.getMyCartNumber())
@@ -48,16 +48,17 @@ public class AccountService {
                 .findByCartNumber(accountTransferRequest.getTransferCartNumber())
                 .orElseThrow(() -> new CartNotFoundException("Cart number not found"));
 
-        if (myAccount.getBalance().compareTo(accountTransferRequest.getBalance()) >=0){
+        if (myAccount.getBalance().compareTo(accountTransferRequest.getBalance()) >= 0) {
 
             BigDecimal myCartNumberNewBalance = myAccount.getBalance().subtract(accountTransferRequest.getBalance());
             BigDecimal transferCartNumberNewBalance = transferAccount.getBalance().add(accountTransferRequest.getBalance());
 
-            accountRepository.updateAccountBalance(myAccount.getCartNumber(),myCartNumberNewBalance);
-            accountRepository.updateAccountBalance(transferAccount.getCartNumber(),transferCartNumberNewBalance);
+            accountRepository.updateAccountBalance(myAccount.getCartNumber(), myCartNumberNewBalance);
+            accountRepository.updateAccountBalance(transferAccount.getCartNumber(), transferCartNumberNewBalance);
         }
         return accountTransferRequest;
     }
+
     @Transactional
     public AccountDto createAccount(String finCode) {
         UserEntity userEntity = userRepository.findByFinCode(finCode)
@@ -70,12 +71,14 @@ public class AccountService {
 
         return accountMapper.entityToDto(savedEntity);
     }
+
     @Transactional
-    public void blockAccount(String cartNumber ){
-        AccountEntity byCartNumber = accountRepository.findByCartNumber(cartNumber).orElseThrow(()->new CartNotFoundException("Cart not found"));
+    public void blockAccount(String cartNumber) {
+        AccountEntity byCartNumber = accountRepository.findByCartNumber(cartNumber).orElseThrow(() -> new CartNotFoundException("Cart not found"));
         byCartNumber.setAccountStatus(AccountStatus.BLOCKED);
         accountRepository.save(byCartNumber);
     }
+
     @Transactional(readOnly = true)
     public List<AccountResponse> getMyAccount(String finCode) {
         UserEntity userEntity = userRepository.findByFinCode(finCode)
@@ -89,30 +92,21 @@ public class AccountService {
 
         return accountMapper.entityListToAccountResponseList(accountsByUserId);
     }
+
     @Transactional
-    public void updatePin(String finCode,  String cartNumber , String oldPin , String newPin ) {
+    public void updatePin(String finCode, String cartNumber, String oldPin, String newPin) {
         UserEntity userEntity = userRepository.findByFinCode(finCode)
                 .orElseThrow(() -> new UserNotFoundException("User not found with finCode: " + finCode));
 
         List<AccountEntity> accountsByUserId = accountRepository.findAccountsByUserId(userEntity.getId());
-        AccountEntity matchesAccount = accountsByUserId.stream().filter(account -> account.getCartNumber().equals(cartNumber)).findFirst().orElseThrow(()->new CartNotFoundException("Cart not found"));
+        AccountEntity matchesAccount = accountsByUserId.stream().filter(account -> account.getCartNumber().equals(cartNumber)).findFirst().orElseThrow(() -> new CartNotFoundException("Cart not found"));
 
         boolean equals = matchesAccount.getPin().equals(oldPin);
         if (equals) {
             matchesAccount.setPin(newPin);
             accountRepository.updateAccountEntityByCartNumber(cartNumber, matchesAccount);
-        }else {
+        } else {
             throw new InvalidCartNumberException("Pin code false ");
         }
-
-
-
     }
-
 }
-
-
-
-
-
-
