@@ -41,11 +41,11 @@ public class AuthService {
 
     public UserRegisterResponse register(UserRegisterRequest userRegisterRequest) {
         if (userRepository.existsByFinCode(userRegisterRequest.getFinCode())) {
-            throw new UserAlreadyExistException("User Already Exists for this fin code");}
-           else if (userRepository.existsByEmail(userRegisterRequest.getEmail())) {
-                throw new UserAlreadyExistException("User Already Exists for this email");}
-           else if (userRepository.existsByPhoneNumber(userRegisterRequest.getPhoneNumber())) {
-               throw new UserAlreadyExistException("User Already Exists for this phone number");
+            throw new UserAlreadyExistException("User Already Exists for this fin code");
+        } else if (userRepository.existsByEmail(userRegisterRequest.getEmail())) {
+            throw new UserAlreadyExistException("User Already Exists for this email");
+        } else if (userRepository.existsByPhoneNumber(userRegisterRequest.getPhoneNumber())) {
+            throw new UserAlreadyExistException("User Already Exists for this phone number");
         }
         userRegisterRequest.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
 
@@ -53,7 +53,6 @@ public class AuthService {
         UserEntity save = userRepository.save(userEntity);
         return userMapper.entityToDtoFromResponse(save);
     }
-
 
 
     private TokenResponse authenticateLogin(UserLoginRequest userLoginRequest) {
@@ -68,6 +67,3 @@ public class AuthService {
 
 
 }
-
-
-

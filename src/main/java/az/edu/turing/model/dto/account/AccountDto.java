@@ -15,23 +15,23 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountDto {
-        private Long id;
-        @NotBlank(message = "Cart number is required")
-        @Size(max = 16, message = "Cart number cannot exceed 16 characters")
-        private String cartNumber;
+    private Long id;
+    @NotBlank(message = "Cart number is required")
+    @Size(max = 16, message = "Cart number cannot exceed 16 characters")
+    private String cartNumber;
 
-        @NotNull(message = "Balance is required")
-        @DecimalMin(value = "0.0", inclusive = true, message = "Balance cannot be negative")
-        private BigDecimal balance;
+    @NotNull(message = "Balance is required")
+    @DecimalMin(value = "0.0", inclusive = true, message = "Balance cannot be negative")
+    private BigDecimal balance;
 
-        @NotNull(message = "Account status is required")
-        private AccountStatus accountStatus;
+    @NotNull(message = "Account status is required")
+    private AccountStatus accountStatus;
 
-        @Size(max = 4, message = "PIN cannot exceed 4 characters")
-        private String pin;
+    @Size(max = 4, message = "PIN cannot exceed 4 characters")
+    private String pin;
 
-        @Size(max = 3, message = "CVV cannot exceed 3 characters")
-        private String cvv;
+    @Size(max = 3, message = "CVV cannot exceed 3 characters")
+    private String cvv;
 
-        private Long userId;
-    }
+    private Long userId;
+}
