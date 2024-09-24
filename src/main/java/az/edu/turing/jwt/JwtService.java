@@ -30,21 +30,22 @@ public class JwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public  String extractUsername(String token) {
+    public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     public Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
-    public Boolean validateToken(String token , UserDetails userDetails){
+
+    public Boolean validateToken(String token, UserDetails userDetails) {
         final String finCode = extractUsername(token);
         return finCode.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
-    public String generateToken(String finCode){
-        Map<String ,Object> claims = new HashMap<>();
-        return createToken(claims,finCode);
+    public String generateToken(String finCode) {
+        Map<String, Object> claims = new HashMap<>();
+        return createToken(claims, finCode);
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
@@ -52,8 +53,8 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() *100 * 60 * 60 * 10 ))
-                .signWith(SignatureAlgorithm.HS256 ,SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() * 100 * 60 * 60 * 10))
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
