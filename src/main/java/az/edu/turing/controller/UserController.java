@@ -1,6 +1,5 @@
 package az.edu.turing.controller;
 
-import az.edu.turing.dao.entity.UserEntity;
 import az.edu.turing.model.dto.user.UserDto;
 import az.edu.turing.model.dto.user.UserRegisterRequest;
 import az.edu.turing.model.dto.user.UserResponse;
@@ -26,20 +25,21 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<UserResponse> getUser(@RequestHeader ("Authorization") String auth) {
+    public ResponseEntity<UserResponse> getUser(@RequestHeader("Authorization") String auth) {
         String finCode = helper.getFinCode(auth);
         UserResponse user = userService.getUser(finCode);
         return ResponseEntity.ok(user);
     }
 
     @PatchMapping("/update2")
-    public ResponseEntity<UserRegisterRequest> updateUser(@RequestHeader ("Authorization") String auth, @Valid @RequestBody UserRegisterRequest userDto) {
+    public ResponseEntity<UserRegisterRequest> updateUser(@RequestHeader("Authorization") String auth, @Valid @RequestBody UserRegisterRequest userDto) {
         String finCode = helper.getFinCode(auth);
         UserRegisterRequest updatedUser = userService.updateUser(finCode, userDto);
         return ResponseEntity.ok(updatedUser);
     }
+
     @DeleteMapping("/delete")
-    public void deleteUser(@RequestHeader ("Authorization") String auth) {
+    public void deleteUser(@RequestHeader("Authorization") String auth) {
         String finCode = helper.getFinCode(auth);
         userService.deleteUser(finCode);
     }

@@ -22,23 +22,26 @@ public class AccountController {
     private final AuthorizationHelperService helper;
 
     @PostMapping("/transfer")
-    public ResponseEntity<AccountTransferRequest> transferMoney(@RequestHeader ("Authorization") String auth ,@Valid @RequestBody AccountTransferRequest requestDto) {
+    public ResponseEntity<AccountTransferRequest> transferMoney(@RequestHeader("Authorization") String auth, @Valid @RequestBody AccountTransferRequest requestDto) {
         String finCode = helper.getFinCode(auth);
-        return ResponseEntity.ok(service.transfer(finCode,requestDto));
+        return ResponseEntity.ok(service.transfer(finCode, requestDto));
     }
+
     @PostMapping("/create")
-    public ResponseEntity<AccountDto> create(@RequestHeader ("Authorization") String auth) {
+    public ResponseEntity<AccountDto> create(@RequestHeader("Authorization") String auth) {
         String finCode = helper.getFinCode(auth);
         return ResponseEntity.ok(service.createAccount(finCode));
     }
+
     @GetMapping("/")
-    public ResponseEntity<List<AccountResponse>> account(@RequestHeader ("Authorization") String auth) {
+    public ResponseEntity<List<AccountResponse>> account(@RequestHeader("Authorization") String auth) {
         String finCode = helper.getFinCode(auth);
         return ResponseEntity.ok(service.getMyAccount(finCode));
     }
+
     @PatchMapping("/update")
-    public void update(@RequestHeader("Authorization")  String  auth ,@RequestBody AccountUpdateRequest request) {
+    public void update(@RequestHeader("Authorization") String auth, @RequestBody AccountUpdateRequest request) {
         String finCode = helper.getFinCode(auth);
-        service.updatePin(finCode,request.getCartNumber(),request.getOldPin(),request.getNewPin());
+        service.updatePin(finCode, request.getCartNumber(), request.getOldPin(), request.getNewPin());
     }
 }
