@@ -8,11 +8,15 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity,Long> {
-   void deleteByFinCode(String finCode);//todo
-   Optional<UserEntity> findByFinCode(String finCode);
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+    void deleteByFinCode(String finCode);//todo
+
+    Optional<UserEntity> findByFinCode(String finCode);
+
     boolean existsByFinCode(@NotBlank String finCode);
+
     boolean existsByEmail(@NotBlank String email);
+
     boolean existsByPhoneNumber(@NotBlank String phoneNumber);
 
 }
