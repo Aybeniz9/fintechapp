@@ -25,9 +25,8 @@ public interface AccountMapper {
 
     AccountResponse entityToAccountResponse(AccountEntity accountEntity);
 
-    @Mapping(source = "balance", target = "price")
-    @Mapping(source = "accountStatus", target = "status")
-    List<AccountResponse> entityToAccountResponse(List<AccountEntity> accountEntity);
+    List<AccountResponse> entityListToAccountResponseList(List<AccountEntity> accountEntity);
+
 
     AccountTransferRequest entityToAccountTransferRequest(AccountEntity accountEntity);
 }

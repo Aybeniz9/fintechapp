@@ -45,4 +45,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleException(AccountsNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(InvalidCartNumberException.class)
+    public ResponseEntity<String> handleInvalidCartNumberException(InvalidCartNumberException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

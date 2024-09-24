@@ -14,9 +14,12 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class AccountTransferRequest {
     @NotBlank(message = "Cart number cannot be blank")
-    private String cartNumber;
+    private String myCartNumber;
+
+    @NotBlank(message = "Cart number cannot be blank")
+    private String transferCartNumber;
 
     @NotNull(message = "Price cannot be null")
     @Min(value = 1, message = "Price must be at least 1")
-    private BigDecimal price;
+    private BigDecimal balance;
 }
