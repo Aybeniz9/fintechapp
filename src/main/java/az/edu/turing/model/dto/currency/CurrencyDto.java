@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class CurrencyDto {
-    private String value ;
+    private String value;
 }

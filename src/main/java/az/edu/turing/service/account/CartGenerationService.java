@@ -7,11 +7,12 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Random;
+
 @Service
 @RequiredArgsConstructor
 public class CartGenerationService {
 
-    private final Random random =new Random();
+    private final Random random = new Random();
 
     public AccountDto createCart() {
         AccountDto accountDto = new AccountDto();
@@ -24,7 +25,7 @@ public class CartGenerationService {
     }
 
     private String cartGenerator() {
-        return "4098" + (long)(random.nextDouble() * 9_000_000_000_00L);
+        return "4098" + (long) (random.nextDouble() * 9_000_000_000_00L);
     }
 
     private String cvvGenerator() {
@@ -34,6 +35,5 @@ public class CartGenerationService {
     private String pinGenerator() {
         return String.valueOf(1000 + random.nextInt(9000));
     }
-
 
 }
