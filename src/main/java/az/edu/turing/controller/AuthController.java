@@ -6,7 +6,6 @@ import az.edu.turing.model.dto.user.UserLoginRequest;
 import az.edu.turing.model.dto.user.UserRegisterResponse;
 import az.edu.turing.service.authentication.AuthService;
 import az.edu.turing.service.notification.NotificationService;
-import az.edu.turing.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +28,9 @@ public class AuthController {
 
         return ResponseEntity.ok(authService.login(userLoginRequest));
     }
+
     @PostMapping("/register")
     public ResponseEntity<UserRegisterResponse> register(@Valid @RequestBody UserRegisterRequest userRequest) {
         return ResponseEntity.ok(authService.register(userRequest));
     }
 }
-

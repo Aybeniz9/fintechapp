@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.UniqueElements;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserRegisterRequest{
+public class UserRegisterRequest {
     @NotBlank(message = "Name is required")
     @Size(max = 50, message = "Name cannot exceed 50 characters")
     private String name;

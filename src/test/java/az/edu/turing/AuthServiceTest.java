@@ -106,7 +106,7 @@ public class AuthServiceTest {
         when(userRepository.existsByPhoneNumber(registerRequest.getPhoneNumber())).thenReturn(false);
         when(userMapper.dtoFromRegisterToEntity(registerRequest)).thenReturn(userEntity);
         when(userRepository.save(userEntity)).thenReturn(savedUser);
-        when(userMapper.entityToDtoFromResponse(savedUser)).thenReturn(new UserRegisterResponse("1234567","John","Doe"));
+        when(userMapper.entityToDtoFromResponse(savedUser)).thenReturn(new UserRegisterResponse("1234567", "John", "Doe"));
 
         // When
         UserRegisterResponse response = authService.register(registerRequest);

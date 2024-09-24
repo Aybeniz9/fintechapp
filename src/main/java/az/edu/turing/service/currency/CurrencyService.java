@@ -53,12 +53,13 @@ public class CurrencyService {
             String code = valute.getAttribute("Code");
             if (code.equals("EUR")) {
                 String value = valute.getElementsByTagName("Value").item(0).getTextContent();
-            currencyDto.setValue(value);
+                currencyDto.setValue(value);
             }
         }
         return currencyDto;
     }
-    public CurrencyDto trl(){
+
+    public CurrencyDto trl() {
         Document document = configCurrency();
         NodeList valuteList = document.getElementsByTagName("Valute");
         CurrencyDto currencyDto = new CurrencyDto();

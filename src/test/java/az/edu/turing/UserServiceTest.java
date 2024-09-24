@@ -1,4 +1,5 @@
 package az.edu.turing;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,6 +65,7 @@ public class UserServiceTest {
         assertEquals("User not found", exception.getMessage());
         verify(userRepository).findByFinCode(finCode);
     }
+
     @Test
     void testGetAllUsers() {
         // Given
@@ -82,6 +84,7 @@ public class UserServiceTest {
         verify(userRepository).findAll();
         verify(userMapper).entityListToDtoList(userEntities);
     }
+
     @Test
     void testDeleteUserSuccess() {
         // Given
@@ -111,6 +114,7 @@ public class UserServiceTest {
         verify(userRepository).findByFinCode(finCode);
         verify(userRepository, never()).delete(any(UserEntity.class));
     }
+
     @Test
     void testUpdateUserSuccess() {
         // Given

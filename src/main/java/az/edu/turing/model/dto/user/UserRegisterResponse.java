@@ -15,5 +15,5 @@ public class UserRegisterResponse {
 
     private String name;
 
-    private String surname ;
+    private String surname;
 }

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.util.List;
+
 @Data
 public class UserResponse {
     @NotBlank(message = "Name is required")
